@@ -59,4 +59,4 @@
 	rest.delete = function (url, callback) { return rest("DELETE", url, callback); };
 
 	window.rest = rest;
-})();
+})();
