@@ -1,4 +1,6 @@
 const express = require("express");
+const path = require("path");
+const fs = require("fs");
 const jwt = require("jwt-simple");
 const { createClient } = require('@supabase/supabase-js');
 
@@ -9,8 +11,16 @@ const supabaseUrl = 'https://snawilkykpqlbpstmcwa.supabase.co';
 const supabaseKey = 'sb_publishable_fipgHlQrUeFJvkChpXz6lA_SOvnxzKn';
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-app.use("/appCliente", express.static("Cliente_rest"));
+const carpetaCliente = fs.existsSync(path.join(__dirname, "Cliente_rest"))
+    ? path.join(__dirname, "Cliente_rest")
+    : path.join(__dirname, "cliente_rest");
+
+app.use("/appCliente", express.static(carpetaCliente));
 app.use(express.json());
+
+app.get("/", function (req, res) {
+    res.redirect("/appCliente/index.html");
+});
 
 app.post("/api/gestores", async function (req, res) {
     const datos = req.body;
@@ -293,7 +303,7 @@ app.delete("/api/recursos/:id", async function (req, res) {
     }
 });
 
-app.listen(3000, function () {
-    console.log("Servidor escuchando en el puerto 3000");
-    console.log("http://localhost:3000/appCliente/index.html");
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, function () {
+    console.log("Servidor escuchando en el puerto " + PORT);
 });
